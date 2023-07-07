@@ -35,6 +35,13 @@ class HandCricketGame:
         self.batting_enabled = False
         self.bowling_enabled = False
 
+        # Actual Scorecard
+        self.scorecards_label = tk.Label(window, text="Actual Scorecard:")
+        self.scorecards_label.pack(pady=10)
+
+        self.scorecards_text = tk.Text(window, width=40, height=2)
+        self.scorecards_text.pack()
+
         # Scorecard
         self.scorecard_label = tk.Label(window, text="Scorecard:")
         self.scorecard_label.pack(pady=3)
@@ -50,6 +57,8 @@ class HandCricketGame:
         self.bot_guess = 0
         self.scorecard = []
         self.target_score = 0
+        self.overs = 0
+        self.balls_bowled = 0
 
         # Toss variables
         self.toss_result = ""
@@ -135,6 +144,7 @@ class HandCricketGame:
         self.outs_label.config(text="Your Wickets: 0 / 3")
         self.bot_label.config(text="Bot's Guess: ")
         self.update_scorecard()
+        self.update_actual_scorecard()
         messagebox.showinfo("First Innings", "Your batting innings begins!")
 
     def second_innings(self):
@@ -149,6 +159,7 @@ class HandCricketGame:
         self.outs_label.config(text="Bot's Wickets: 0 / 3")
         self.bot_label.config(text="Bot's Guess: ")
         self.update_scorecard()
+        self.update_actual_scorecard()
         messagebox.showinfo("Second Innings", "Your bowling innings begins!")
 
     def between_innings(self):
@@ -184,7 +195,13 @@ class HandCricketGame:
         else:
             self.scorecard.append("Player: " + str(runs))
 
+        self.balls_bowled += 1
+        if self.balls_bowled % 6 == 0:  # Check if the over is complete
+            self.overs += 1
+            self.balls_bowled = 0
+        
         self.update_scorecard()
+        self.update_actual_scorecard()
 
         if self.wickets == 3:
             messagebox.showinfo("Innings Over", "All wickets are down. First innings is over!")
@@ -203,7 +220,13 @@ class HandCricketGame:
         else:
             self.scorecard.append("Bot: " + str(self.bot_guess))
 
+        self.balls_bowled += 1
+        if self.balls_bowled % 6 == 0:  # Check if the over is complete
+            self.overs += 1
+            self.balls_bowled = 0
+
         self.update_scorecard()
+        self.update_actual_scorecard()
 
         if self.bot_wickets == 3:
             messagebox.showinfo("Innings Over", "All bot's wickets are down. Second innings is over!")
@@ -255,6 +278,13 @@ class HandCricketGame:
 
     def calculate_target_score(self):
         self.target_score = self.runs + 1
+    
+    def get_actual_scorecard(self):
+        return f"Runs: {self.runs} - Overs: {self.overs}.{self.balls_bowled % 6} -  Wickets: {self.wickets}"
+
+    def update_actual_scorecard(self):
+        self.scorecards_text.delete(1.0, tk.END)
+        self.scorecards_text.insert(tk.END, self.get_actual_scorecard())
 
     def enable_toss_buttons(self):
         for button in self.toss_buttons:
@@ -322,6 +352,8 @@ class HandCricketGame:
         self.wickets = 0
         self.bot_runs = 0
         self.bot_wickets = 0
+        self.balls_bowled = 0
+        self.overs = 0
         self.bot_guess = 0
         self.scorecard = []
         self.target_score = 0
