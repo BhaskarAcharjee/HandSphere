@@ -32,6 +32,20 @@ class HandCricketGame:
             button.pack(side="left", padx=5)
             self.match_mode_buttons.append(button)
 
+        # Choose Wickets
+        self.choose_wickets_label = tk.Label(self.right_panel, text="Choose Wickets:", font=("Arial", 10, "bold"))
+        self.choose_wickets_label.pack(pady=3)
+
+        self.choose_wickets_frame = tk.Frame(self.right_panel)
+        self.choose_wickets_frame.pack(pady=3)
+
+        self.choose_wickets_buttons = []
+        for wicks in ["3", "5", "10", "Custom"]:
+            button = tk.Button(self.choose_wickets_frame, text=wicks, command=lambda w=wicks: self.choose_wickets(w),
+                               font=("Arial", 10))
+            button.pack(side="left", padx=5)
+            self.choose_wickets_buttons.append(button)
+
         # Toss Result
         self.toss_label = tk.Label(self.right_panel, text="Toss Result:", font=("Arial", 10, "bold"))
         self.toss_label.pack(pady=3)
@@ -135,7 +149,7 @@ class HandCricketGame:
         self.player_gesture_image.grid(row=1, column=0, padx=15)
 
         # Bot Gesture
-        self.bot_gesture_label = tk.Label(self.gesture_frame, text="Bot's Input:",
+        self.bot_gesture_label = tk.Label(self.gesture_frame, text="Bot's Guess:",
                                           font=("Arial", 12, "bold"))
         self.bot_gesture_label.grid(row=0, column=1)
 
@@ -183,8 +197,8 @@ class HandCricketGame:
         self.runs_label = tk.Label(self.runs_wickets_frame, text="Runs: 0", font=("Arial", 12))
         self.runs_label.pack(side="left", padx=3)
 
-        self.outs_label = tk.Label(self.runs_wickets_frame, text="Wickets: 0", font=("Arial", 12))
-        self.outs_label.pack(side="left", padx=3)
+        self.wicks_label = tk.Label(self.runs_wickets_frame, text="Wickets: 0", font=("Arial", 12))
+        self.wicks_label.pack(side="left", padx=3)
 
         self.overs_label = tk.Label(self.runs_wickets_frame, text="Overs: 0", font=("Arial", 12))
         self.overs_label.pack(side="left", padx=3)
@@ -219,6 +233,7 @@ class HandCricketGame:
         # Match mode variables
         self.match_mode = ""
         self.custom_overs = 0
+        self.custom_wicks = 0
 
         # Player and Bot Names
         self.player_names = ["Player 1", "Player 2", "Player 3", "Player 4", "Player 5",
@@ -228,6 +243,7 @@ class HandCricketGame:
 
         # Initially Enable/Disable Buttons
         self.enable_match_mode_buttons()
+        self.disable_choose_wicks_buttons()
         self.disable_toss_buttons()
         self.disable_runs_buttons()
         self.disable_choose_batting_buttons()
@@ -256,7 +272,7 @@ class HandCricketGame:
         self.update_overs_label()
         self.update_match_mode_label()
         self.disable_match_mode_buttons()
-        self.enable_toss_buttons()
+        self.enable_choose_wicks_buttons()
 
     def get_custom_overs(self):
         # Create a dialog box or an entry field to get the number of overs for custom mode
@@ -288,19 +304,75 @@ class HandCricketGame:
             dialog_window.destroy()
             self.update_overs_label()  # Update the overs label with the custom overs value
             self.update_match_mode_label()
-            self.enable_toss_buttons()  # Enable the toss buttons after custom overs submission
+            self.enable_choose_wicks_buttons()  # Enable the choose wicks after custom overs submission
             self.disable_match_mode_buttons()  # Disable the match mode buttons after custom overs submission
         else:
             messagebox.showerror("Invalid Input", "Please enter a valid number of overs.")
 
     def update_overs_label(self):
         self.overs_label.config(text="Overs: 0 / " + str(self.custom_overs))
+
+    def update_wicks_label(self):
+        self.wicks_label.config(text="Wickets: 0 / " + str(self.custom_wicks))
+        self.choose_wickets_label.config(text="Wickets: " + str(self.custom_wicks))
     
     def update_match_mode_label(self):
         if self.match_mode == "Custom":
             self.match_mode_label.config(text= "Match Mode: " + self.match_mode + " (" + str(self.custom_overs) + " overs)")
         else:
             self.match_mode_label.config(text= "Match Mode: " + self.match_mode)
+
+    def choose_wickets(self, wicks):
+        if wicks == "3":
+            self.custom_wicks = 3
+            self.show_message("You choose 3 wicket format")
+        elif wicks == "5":
+            self.custom_wicks = 5
+            self.show_message("You choose 5 wicket format")
+        elif wicks == "10":
+            self.custom_wicks = 10
+            self.show_message("You choose 10 wicket format")
+        elif wicks == "Custom":
+            # Display a dialog box to input the number of overs
+            self.custom_wicks = self.get_custom_wicks()
+
+        self.update_wicks_label()
+        self.disable_choose_wicks_buttons()
+        self.enable_toss_buttons()
+
+    def get_custom_wicks(self):
+        # Create a dialog box or an entry field to get the number of overs for custom mode
+        dialog_window = tk.Toplevel(self.window)
+        dialog_window.title("Custom Wickets")
+
+        # Label and entry field for custom overs
+        custom_wicks_label = tk.Label(dialog_window, text="Enter the number of wickets:")
+        custom_wicks_label.pack(pady=10)
+        custom_wicks_entry = tk.Entry(dialog_window)
+        custom_wicks_entry.pack()
+
+        # Submit button
+        submit_button = tk.Button(dialog_window, text="Submit", command=lambda: self.submit_custom_wicks(dialog_window, custom_wicks_entry))
+        submit_button.pack(pady=10)
+
+        # Focus the entry field
+        custom_wicks_entry.focus_set()
+
+        # Run the dialog window event loop
+        dialog_window.mainloop()
+
+        return self.custom_wicks
+    
+    def submit_custom_wicks(self, dialog_window, custom_wicks_entry):
+        wicks = custom_wicks_entry.get()
+        if wicks.isdigit() and int(wicks) > 0:
+            self.custom_wicks = int(wicks)
+            dialog_window.destroy()
+            self.update_wicks_label()
+            self.disable_choose_wicks_buttons()
+            self.enable_toss_buttons()
+        else:
+            messagebox.showerror("Invalid Input", "Please enter a valid number of wickets.")
 
     def choose_toss_option(self, option):
         toss_options = ["Heads", "Tails"]
@@ -356,7 +428,7 @@ class HandCricketGame:
 
         # Update gestures before performing any calculations
         self.update_hand_gestures(runs, self.bot_guess)
-        self.player_gesture_label.config(text="Player's Guess: "+ str(runs))
+        self.player_gesture_label.config(text="Player's Input: "+ str(runs))
         self.bot_gesture_label.config(text="Bot's Guess: "+ str(self.bot_guess))
 
         if self.batting_enabled:
@@ -367,7 +439,7 @@ class HandCricketGame:
 
             if runs == self.bot_guess:
                 self.wickets += 1
-                self.outs_label.config(text="Your Wickets: " + str(self.wickets) + " / 3")
+                self.wicks_label.config(text="Your Wickets: " + str(self.wickets) + " / " + str(self.custom_wicks))
                 self.scorecard.append("Out")
             else:
                 self.scorecard.append("Player: " + str(runs))
@@ -384,7 +456,7 @@ class HandCricketGame:
             self.update_actual_scorecard()
 
             # Check if overs limit reached or all wickets down
-            if self.wickets == 3:  
+            if self.wickets == self.custom_wicks:  
                 self.innings_count += 1
                 self.between_innings()
                 self.disable_choose_batting_buttons()
@@ -411,7 +483,7 @@ class HandCricketGame:
 
             if runs == self.bot_guess:
                 self.bot_wickets += 1
-                self.outs_label.config(text="Bot's Wickets: " + str(self.bot_wickets) + " / 3")
+                self.wicks_label.config(text="Bot's Wickets: " + str(self.bot_wickets) + " / " + str(self.custom_wicks))
                 self.scorecard.append("Bot Out")
             else:
                 self.scorecard.append("Bot: " + str(self.bot_guess))
@@ -428,7 +500,7 @@ class HandCricketGame:
             self.update_actual_scorecard()
 
             # Check if overs limit reached or all wickets down
-            if self.bot_wickets == 3:
+            if self.bot_wickets == self.custom_wicks:
                 self.innings_count += 1
                 self.between_innings()
                 self.disable_choose_bowling_buttons()
@@ -475,7 +547,7 @@ class HandCricketGame:
         inning_scorecard = self.get_inning_scorecard()
 
         self.runs_label.config(text="Runs: 0")
-        self.outs_label.config(text="Wickets: 0")
+        self.wicks_label.config(text="Wickets: 0 /" + str(self.custom_wicks))
         self.overs_label.config(text="Overs: 0 / " + str(self.custom_overs))
         self.player_gesture_label.config(text="Player's Guess: ")
         self.bot_gesture_label.config(text="Bot's Guess: ")
@@ -613,6 +685,14 @@ class HandCricketGame:
         for button in self.match_mode_buttons:
             button.config(state="disabled")
 
+    def enable_choose_wicks_buttons(self):
+        for button in self.choose_wickets_buttons:
+            button.config(state="normal")
+
+    def disable_choose_wicks_buttons(self):
+        for button in self.choose_wickets_buttons:
+            button.config(state="disabled")
+
     def enable_toss_buttons(self):
         for button in self.toss_buttons:
             button.config(state="normal")
@@ -707,10 +787,11 @@ class HandCricketGame:
         self.match_mode_label.config(text= "Match Mode:")
         self.toss_label.config(text="Toss Result: ")
         self.runs_label.config(text="Runs: 0")
-        self.outs_label.config(text="Wickets: 0")
+        self.wicks_label.config(text="Wickets: 0")
         self.overs_label.config(text="Overs: 0")
-        self.player_gesture_label.config(text="Player's Guess: ")
+        self.player_gesture_label.config(text="Player's Input: ")
         self.bot_gesture_label.config(text="Bot's Guess: ")
+        self.choose_wickets_label.config(text="Choose Wickets:")
 
         # Delete text fields text on Reset Game
         self.scorecards_text.delete(1.0, tk.END)
@@ -720,6 +801,7 @@ class HandCricketGame:
 
         # Enable/Disable Buttons on Reset Game
         self.enable_match_mode_buttons()
+        self.disable_choose_wicks_buttons()
         self.disable_toss_buttons()
         self.disable_choose_batting_buttons()
         self.disable_choose_bowling_buttons()
