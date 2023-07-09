@@ -5,7 +5,7 @@ import random
 class HandCricketGame:
     def __init__(self, window):
         self.window = window
-        self.window.title("Cricket Game")
+        self.window.title("Virtual Cricket Game")
 
         # ---------GUI elements---------
         # Match Mode
@@ -13,7 +13,7 @@ class HandCricketGame:
         self.match_mode_label.pack(pady=3)
 
         self.match_mode_frame = tk.Frame(window)
-        self.match_mode_frame.pack(pady=6)
+        self.match_mode_frame.pack(pady=3)
 
         self.match_mode_buttons = []
         for mode in ["T20", "ODI", "Test", "Custom"]:
@@ -28,18 +28,22 @@ class HandCricketGame:
 
         # Toss buttons
         self.toss_buttons_frame = tk.Frame(window)
-        self.toss_buttons_frame.pack(pady=5)
+        self.toss_buttons_frame.pack(pady=3)
 
         self.toss_buttons = []
         for option in ["Heads", "Tails"]:
             button = tk.Button(self.toss_buttons_frame, text=option, command=lambda o=option: 
                                self.choose_toss_option(o), font=("Arial", 10))
-            button.pack(side="left", padx=5)
+            button.pack(side="left", padx=3)
             self.toss_buttons.append(button)
+
+        # Choose Batting-Bowling 
+        self.choose_batting_bowling_label = tk.Label(window, text="Choose Batting / Bowling:", font=("Arial", 10, "bold"))
+        self.choose_batting_bowling_label.pack(pady=3)
 
         # Batting/Bowling Frame
         self.batting_bowling_button_frame = tk.Frame(window)
-        self.batting_bowling_button_frame.pack(pady=5)
+        self.batting_bowling_button_frame.pack(pady=3)
 
         # Batting buttons
         self.choose_batting_buttons = []
@@ -58,35 +62,35 @@ class HandCricketGame:
 
         # Runs, Overs and Wickets
         self.runs_wickets_frame = tk.Frame(window)
-        self.runs_wickets_frame.pack(pady=6)
+        self.runs_wickets_frame.pack(pady=3)
 
         self.runs_label = tk.Label(self.runs_wickets_frame, text="Runs: 0", font=("Arial", 12))
-        self.runs_label.pack(side="left", padx=5)
+        self.runs_label.pack(side="left", padx=3)
 
         self.outs_label = tk.Label(self.runs_wickets_frame, text="Wickets: 0", font=("Arial", 12))
-        self.outs_label.pack(side="left", padx=5)
+        self.outs_label.pack(side="left", padx=3)
 
         self.overs_label = tk.Label(self.runs_wickets_frame, text="Overs: 0", font=("Arial", 12))
-        self.overs_label.pack(side="left", padx=5)
+        self.overs_label.pack(side="left", padx=3)
 
         # Bot's Guess
         self.bot_label = tk.Label(window, text="Bot's Guess:", font=("Arial", 12, "bold"))
-        self.bot_label.pack(pady=6)
+        self.bot_label.pack(pady=3)
 
         # Actual Scorecard
         self.scorecards_label = tk.Label(window, text="Actual Scorecard:", font=("Arial", 12, "bold"))
-        self.scorecards_label.pack(pady=6)
+        self.scorecards_label.pack(pady=3)
 
-        self.scorecards_text = tk.Text(window, width=50, height=5, font=("Arial", 10))
+        self.scorecards_text = tk.Text(window, width=50, height=3, font=("Arial", 10))
         self.scorecards_text.pack()
 
         # Your input to Batting or Bowling
         self.runs_buttons_label = tk.Label(window, text="Your Input:", font=("Arial", 12, "bold"))
-        self.runs_buttons_label.pack(pady=6)
+        self.runs_buttons_label.pack(pady=3)
 
         # Runs buttons
         self.runs_buttons_frame = tk.Frame(window)
-        self.runs_buttons_frame.pack(pady=5)
+        self.runs_buttons_frame.pack(pady=3)
 
         self.run_buttons = []
         for i in range(7):
@@ -96,10 +100,10 @@ class HandCricketGame:
 
         # Additional GUI elements for batting shots
         self.batting_shots_label = tk.Label(window, text="Batting Shots:", font=("Arial", 12, "bold"))
-        self.batting_shots_label.pack(pady=5)
+        self.batting_shots_label.pack(pady=3)
 
         self.batting_shots_frame = tk.Frame(window)
-        self.batting_shots_frame.pack(pady=6)
+        self.batting_shots_frame.pack(pady=3)
 
         self.batting_shots = ["Defensive Shot", "Attacking Shot", "Lofted Shot"]
         self.advanced_batting_buttons = []
@@ -110,10 +114,10 @@ class HandCricketGame:
 
         # Additional GUI elements for bowling variations
         self.bowling_variations_label = tk.Label(window, text="Bowling Variations:", font=("Arial", 12, "bold"))
-        self.bowling_variations_label.pack(pady=5)
+        self.bowling_variations_label.pack(pady=3)
 
         self.bowling_variations_frame = tk.Frame(window)
-        self.bowling_variations_frame.pack(pady=6)
+        self.bowling_variations_frame.pack(pady=3)
 
         self.bowling_variations = ["Fast Bowling", "Spin Bowling", "Swing Bowling"]
         self.advanced_bowling_buttons = []
@@ -123,26 +127,40 @@ class HandCricketGame:
             button.pack(side="left", padx=5)
             self.advanced_bowling_buttons.append(button)
 
-        # Batsman Scorecard
-        self.batsman_scorecard_label = tk.Label(window, text="Batsman Scorecard:", font=("Arial", 12, "bold"))
-        self.batsman_scorecard_label.pack(pady=6)
+        # Commentry Box
+        self.commentry_label = tk.Label(window, text="Commentry Box:", font=("Arial", 12, "bold"))
+        self.commentry_label.pack(pady=3)
 
-        self.batsman_scorecard_text = tk.Text(window, width=30, height=10, font=("Arial", 10))
-        self.batsman_scorecard_text.pack()
+        self.commentary_text = tk.Text(window, width=50, height=4, font=("Arial", 10))
+        self.commentary_text.pack(pady=3)
+
+       # Scorecards Frame
+        self.scorecards_frame = tk.Frame(window)
+        self.scorecards_frame.pack(pady=3)
+
+        # Batsman Scorecard
+        self.batsman_scorecard_label = tk.Label(self.scorecards_frame, text="Batsman Scorecard:", font=("Arial", 12, "bold"))
+        self.batsman_scorecard_label.grid(row=0, column=0)
+
+        self.batsman_scorecard_text = tk.Text(self.scorecards_frame, width=30, height=7, font=("Arial", 10))
+        self.batsman_scorecard_text.grid(row=1, column=0, padx=10)
+
+        # Bowler Scorecard
+        self.bowler_scorecard_label = tk.Label(self.scorecards_frame, text="Bowler Scorecard:", font=("Arial", 12, "bold"))
+        self.bowler_scorecard_label.grid(row=0, column=1)
+
+        self.bowler_scorecard_text = tk.Text(self.scorecards_frame, width=30, height=7, font=("Arial", 10))
+        self.bowler_scorecard_text.grid(row=1, column=1, padx=10)
 
         # Reset Button
         self.reset_button = tk.Button(window, text="Reset", command=self.reset_game, font=("Arial", 12))
         self.reset_button.pack(pady=10)
-
-        # Initially Enable/Disable Buttons
-        self.enable_match_mode_buttons()
-        self.disable_toss_buttons()
-        self.disable_runs_buttons()
-        self.disable_choose_batting_buttons()
-        self.disable_choose_bowling_buttons()
-        self.disable_advanced_batting_buttons()
-        self.disable_advanced_bowling_buttons()
-
+        
+        # Call Start Game method
+        self.start_game()
+        
+    def start_game(self):
+        
         # Game variables
         self.runs = 0
         self.wickets = 0
@@ -168,22 +186,41 @@ class HandCricketGame:
         self.match_mode = ""
         self.custom_overs = 0
 
+        # Player and Bot Names
+        self.player_names = ["Player 1", "Player 2", "Player 3", "Player 4", "Player 5",
+                             "Player 6", "Player 7", "Player 8", "Player 9", "Player 10"]
+        self.bot_names = ["Bot 1", "Bot 2", "Bot 3", "Bot 4", "Bot 5",
+                          "Bot 6", "Bot 7", "Bot 8", "Bot 9", "Bot 10"]
+
+        # Initially Enable/Disable Buttons
+        self.enable_match_mode_buttons()
+        self.disable_toss_buttons()
+        self.disable_runs_buttons()
+        self.disable_choose_batting_buttons()
+        self.disable_choose_bowling_buttons()
+        self.disable_advanced_batting_buttons()
+        self.disable_advanced_bowling_buttons()
+
     def choose_match_mode(self, mode):
         if mode == "T20":
             self.match_mode = "T20"
             self.custom_overs = 20
+            self.show_message("You choose T20 format, your custom over will " + str(self.custom_overs) + " overs")
         elif mode == "ODI":
             self.match_mode = "ODI"
             self.custom_overs = 50
+            self.show_message("You choose ODI format, your custom over will " + str(self.custom_overs) + " overs")
         elif mode == "Test":
             self.match_mode = "Test"
             self.custom_overs = 999
+            self.show_message("You choose Test format, your custom over will " + str(self.custom_overs) + " overs")
         elif mode == "Custom":
             self.match_mode = "Custom"
             # Display a dialog box to input the number of overs
             self.custom_overs = self.get_custom_overs()
 
         self.update_overs_label()
+        self.update_match_mode_label()
         self.disable_match_mode_buttons()
         self.enable_toss_buttons()
 
@@ -216,6 +253,7 @@ class HandCricketGame:
             self.custom_overs = int(overs)
             dialog_window.destroy()
             self.update_overs_label()  # Update the overs label with the custom overs value
+            self.update_match_mode_label()
             self.enable_toss_buttons()  # Enable the toss buttons after custom overs submission
             self.disable_match_mode_buttons()  # Disable the match mode buttons after custom overs submission
         else:
@@ -223,7 +261,61 @@ class HandCricketGame:
 
     def update_overs_label(self):
         self.overs_label.config(text="Overs: 0 / " + str(self.custom_overs))
+    
+    def update_match_mode_label(self):
+        if self.match_mode == "Custom":
+            self.match_mode_label.config(text= "Match Mode: " + self.match_mode + " (" + str(self.custom_overs) + " overs)")
+        else:
+            self.match_mode_label.config(text= "Match Mode: " + self.match_mode)
 
+    def choose_toss_option(self, option):
+        toss_options = ["Heads", "Tails"]
+        self.toss_result = random.choice(toss_options)
+        self.toss_label.config(text="Toss Result: " + self.toss_result)
+
+        if option == self.toss_result:
+            self.user_won_toss = True
+            # messagebox.showinfo("Toss Result", "You won the toss! Choose Batting or Bowling.")
+            self.show_message("Toss Result: You won the toss! Choose Batting or Bowling.")
+            self.enable_choose_batting_buttons()
+            self.enable_choose_bowling_buttons()
+        else:
+            self.user_won_toss = False
+            # messagebox.showinfo("Toss Result", "You lost the toss! Bot will choose Batting or Bowling.")
+            self.show_message("Toss Result: You lost the toss! Bot will choose Batting or Bowling.")
+            bot_choice = random.choice(["Bat", "Bowl"])
+            if bot_choice == "Bat":
+                self.disable_choose_batting_buttons()
+                self.enable_choose_bowling_buttons()
+                # messagebox.showinfo("Bot's Choice", "Bot has chosen to bat.")
+                self.show_message("Bot's Choice: Bot has chosen to bat.")
+            else:
+                self.disable_choose_bowling_buttons()
+                self.enable_choose_batting_buttons()
+                # messagebox.showinfo("Bot's Choice", "Bot has chosen to bowl.")
+                self.show_message("Bot's Choice: Bot has chosen to bowl.")
+
+        self.disable_toss_buttons()
+    
+    def select_bat(self):
+        self.batting_enabled = True
+        self.bowling_enabled = False
+        self.enable_runs_buttons()
+        self.disable_choose_batting_buttons()
+        self.disable_choose_bowling_buttons()
+        self.enable_advanced_batting_buttons()
+        self.disable_advanced_bowling_buttons()
+        self.show_message("Your batting sessions starts")
+
+    def select_bowl(self):
+        self.batting_enabled = False
+        self.bowling_enabled = True
+        self.enable_runs_buttons()
+        self.disable_choose_batting_buttons()
+        self.disable_choose_bowling_buttons()
+        self.disable_advanced_batting_buttons()
+        self.enable_advanced_bowling_buttons()
+        self.show_message("Your bowling sessions starts")
     
     def user_bat_bowl(self, runs):
         if self.batting_enabled:
@@ -248,20 +340,29 @@ class HandCricketGame:
 
             self.overs_label.config(text="Overs: " + f"{self.bot_overs}.{self.bot_balls_bowled % 6}" + " / " + str(self.custom_overs))
 
-            self.update_scorecard()
+            self.update_batsman_scorecard()
+            self.update_bowler_scorecard()
             self.update_actual_scorecard()
 
             # Check if overs limit reached or all wickets down
             if self.wickets == 3:  
-                messagebox.showinfo("Innings Over", "All your's wickets are down. Innings is over!")
                 self.innings_count += 1
                 self.between_innings()
                 self.disable_choose_batting_buttons()
+                if self.innings_count == 0:
+                    self.show_message("Start New Game!")
+                else:
+                    # messagebox.showinfo("Innings Over", "All your's wickets are down. Innings is over!")
+                    self.show_message("Innings Over, All your's wickets are down. Innings is over!")
             if self.bot_overs >= self.custom_overs:
-                messagebox.showinfo("Innings Over", "Your custom overs reached. Innings is over!")
                 self.innings_count += 1
                 self.between_innings()
                 self.disable_choose_batting_buttons()
+                if self.innings_count == 0:
+                    self.show_message("Start New Game!")
+                else:
+                    # messagebox.showinfo("Innings Over", "Your custom overs reached. Innings is over!")
+                    self.show_message("Innings Over, Your custom overs reached. Innings is over!")
                     
         elif self.bowling_enabled:
             self.bot_guess = random.randint(0, 6)
@@ -285,74 +386,31 @@ class HandCricketGame:
 
             self.overs_label.config(text="Overs: " + f"{self.overs}.{self.balls_bowled % 6}" + " / " + str(self.custom_overs))
 
-            self.update_scorecard()
+            self.update_batsman_scorecard()
+            self.update_bowler_scorecard()
             self.update_actual_scorecard()
 
             # Check if overs limit reached or all wickets down
             if self.bot_wickets == 3:
                 self.innings_count += 1
-                messagebox.showinfo("Innings Over", "All bot's wickets are down. Innings is over!")
                 self.between_innings()
                 self.disable_choose_bowling_buttons()
+
+                if self.innings_count == 0:
+                    self.show_message("Start New Game!")
+                else:
+                    # messagebox.showinfo("Innings Over", "All bot's wickets are down. Innings is over!")
+                    self.show_message("Innings Over, All bot's wickets are down. Innings is over!")
             if self.overs >= self.custom_overs:
-                messagebox.showinfo("Innings Over", "Bot's custom overs reached. Innings is over!")
                 self.innings_count += 1
                 self.between_innings()
                 self.disable_choose_bowling_buttons()
 
-
-    def choose_toss_option(self, option):
-        toss_options = ["Heads", "Tails"]
-        self.toss_result = random.choice(toss_options)
-        self.toss_label.config(text="Toss Result: " + self.toss_result)
-
-        if option == self.toss_result:
-            self.user_won_toss = True
-            messagebox.showinfo("Toss Result", "You won the toss! Choose Batting or Bowling.")
-            self.enable_choose_batting_buttons()
-            self.enable_choose_bowling_buttons()
-        else:
-            self.user_won_toss = False
-            messagebox.showinfo("Toss Result", "You lost the toss! Bot will choose Batting or Bowling.")
-            bot_choice = random.choice(["Bat", "Bowl"])
-            if bot_choice == "Bat":
-                self.disable_choose_batting_buttons()
-                self.enable_choose_bowling_buttons()
-                messagebox.showinfo("Bot's Choice", "Bot has chosen to bat.")
-            else:
-                self.disable_choose_bowling_buttons()
-                self.enable_choose_batting_buttons()
-                messagebox.showinfo("Bot's Choice", "Bot has chosen to bowl.")
-
-        self.disable_toss_buttons()
-
-    
-    def select_bat(self):
-        self.batting_enabled = True
-        self.bowling_enabled = False
-        self.enable_runs_buttons()
-        self.disable_choose_batting_buttons()
-        self.disable_choose_bowling_buttons()
-        self.enable_advanced_batting_buttons()
-        self.disable_advanced_bowling_buttons()
-
-    def select_bowl(self):
-        self.batting_enabled = False
-        self.bowling_enabled = True
-        self.enable_runs_buttons()
-        self.disable_choose_batting_buttons()
-        self.disable_choose_bowling_buttons()
-        self.disable_advanced_batting_buttons()
-        self.enable_advanced_bowling_buttons()
-        
-    def choose_bat_bowl_option(self, option):
-        self.disable_choose_batting_buttons()
-        self.disable_choose_bowling_buttons()
-
-        if option == "Batting":
-            self.select_bat()
-        else:
-            self.select_bowl()
+                if self.innings_count == 0:
+                    self.show_message("Start New Game!")
+                else:
+                    # messagebox.showinfo("Innings Over", "Bot's custom overs reached. Innings is over!")
+                    self.show_message("Innings Over, Bot's custom overs reached. Innings is over!")
     
     def user_bat_with_shot(self, shot):
         # Simulate batting shot behavior
@@ -386,12 +444,14 @@ class HandCricketGame:
 
         if self.innings_count == 1:
             messagebox.showinfo("Between Innings", "First innings is over!\n\n" + inning_scorecard)
+            self.show_message("Between Innings, First innings is over!\n" + inning_scorecard)
             if self.batting_enabled:
                 self.enable_choose_bowling_buttons()
             else:
                 self.enable_choose_batting_buttons()
         else:
             messagebox.showinfo("Between Innings", "Second innings is over!\n\n" + inning_scorecard)
+            self.show_message("Between Innings, Second innings is over!\n" + inning_scorecard)
 
         self.calculate_target_score()
         
@@ -399,9 +459,9 @@ class HandCricketGame:
         self.disable_advanced_batting_buttons()
         self.disable_advanced_bowling_buttons()
 
-        self.check_game_over() #Checks Game Over
+        self.check_game_over() #Checks if Game Over
 
-    def update_scorecard(self):
+    def update_batsman_scorecard(self):
         self.batsman_scorecard_text.delete(1.0, tk.END)
         inning_scorecard = ""
         player_score = 0
@@ -431,6 +491,10 @@ class HandCricketGame:
             inning_scorecard += "Bot: " + str(bot_score) + " (" + str(bot_balls) + " balls)\n"
 
         self.batsman_scorecard_text.insert(tk.END, inning_scorecard)
+    
+    def update_bowler_scorecard(self):
+        # to be implemented
+        pass
 
     def get_inning_scorecard(self):
         inning_scorecard = ""
@@ -465,6 +529,10 @@ class HandCricketGame:
     def update_actual_scorecard(self):
         self.scorecards_text.delete(1.0, tk.END)
         self.scorecards_text.insert(tk.END, self.get_actual_scorecard())
+
+    def show_message(self, message):
+        self.commentary_text.delete(1.0, tk.END)
+        self.commentary_text.insert(tk.END, message)
     
     def enable_match_mode_buttons(self):
         for button in self.match_mode_buttons:
@@ -539,7 +607,10 @@ class HandCricketGame:
                 winner_message = "It's a tie!"
 
             messagebox.showinfo("Game Over", f"{winner_message}\n\n{inning_scorecard}")
-            self.reset_game() # Reset Innings 
+            self.show_message("Game Over f{winner_message}\n\n{inning_scorecard}")
+            
+            # Reset Game
+            self.reset_game() 
 
     def reset_game(self):
         self.runs = 0
@@ -561,14 +632,19 @@ class HandCricketGame:
         self.toss_result = ""
         self.user_won_toss = False
 
+        #Configure text label as default on Reset Game
+        self.match_mode_label.config(text= "Match Mode:")
+        self.toss_label.config(text="Toss Result: ")
         self.runs_label.config(text="Runs: 0")
         self.outs_label.config(text="Wickets: 0")
         self.overs_label.config(text="Overs: 0")
         self.bot_label.config(text="Bot's Guess: ")
-        self.toss_label.config(text="Toss Result: ")
 
-        self.batsman_scorecard_text.delete(1.0, tk.END)
+        # Delete text fields text on Reset Game
         self.scorecards_text.delete(1.0, tk.END)
+        self.commentary_text.delete(1.0, tk.END)
+        self.batsman_scorecard_text.delete(1.0, tk.END)
+        self.bowler_scorecard_text.delete(1.0, tk.END)
 
         # Enable/Disable Buttons on Reset Game
         self.enable_match_mode_buttons()
