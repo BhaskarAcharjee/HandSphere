@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
+from PIL import Image, ImageTk
 import random
 
 class HandCricketGame:
@@ -8,60 +9,175 @@ class HandCricketGame:
         self.window.title("Virtual Cricket Game")
 
         # ---------GUI elements---------
+        # Left Panel
+        self.left_panel = tk.Frame(window)
+        self.left_panel.pack(side="left", padx=10)
+
+        # Right Panel
+        self.right_panel = tk.Frame(window)
+        self.right_panel.pack(side="left", padx=10)
+
+        #-----right pannel elements-----
         # Match Mode
-        self.match_mode_label = tk.Label(window, text="Match Mode:", font=("Arial", 10, "bold"))
+        self.match_mode_label = tk.Label(self.right_panel, text="Match Mode:", font=("Arial", 10, "bold"))
         self.match_mode_label.pack(pady=3)
 
-        self.match_mode_frame = tk.Frame(window)
+        self.match_mode_frame = tk.Frame(self.right_panel)
         self.match_mode_frame.pack(pady=3)
 
         self.match_mode_buttons = []
         for mode in ["T20", "ODI", "Test", "Custom"]:
-            button = tk.Button(self.match_mode_frame, text=mode, command=lambda m=mode: 
-                               self.choose_match_mode(m), font=("Arial", 10))
+            button = tk.Button(self.match_mode_frame, text=mode, command=lambda m=mode: self.choose_match_mode(m),
+                               font=("Arial", 10))
             button.pack(side="left", padx=5)
             self.match_mode_buttons.append(button)
-            
+
         # Toss Result
-        self.toss_label = tk.Label(window, text="Toss Result:", font=("Arial", 10, "bold"))
+        self.toss_label = tk.Label(self.right_panel, text="Toss Result:", font=("Arial", 10, "bold"))
         self.toss_label.pack(pady=3)
 
         # Toss buttons
-        self.toss_buttons_frame = tk.Frame(window)
+        self.toss_buttons_frame = tk.Frame(self.right_panel)
         self.toss_buttons_frame.pack(pady=3)
 
         self.toss_buttons = []
         for option in ["Heads", "Tails"]:
-            button = tk.Button(self.toss_buttons_frame, text=option, command=lambda o=option: 
-                               self.choose_toss_option(o), font=("Arial", 10))
+            button = tk.Button(self.toss_buttons_frame, text=option, command=lambda o=option: self.choose_toss_option(o),
+                               font=("Arial", 10))
             button.pack(side="left", padx=3)
             self.toss_buttons.append(button)
 
-        # Choose Batting-Bowling 
-        self.choose_batting_bowling_label = tk.Label(window, text="Choose Batting / Bowling:", font=("Arial", 10, "bold"))
+        # Choose Batting-Bowling
+        self.choose_batting_bowling_label = tk.Label(self.right_panel, text="Choose Batting / Bowling:",
+                                                     font=("Arial", 10, "bold"))
         self.choose_batting_bowling_label.pack(pady=3)
 
         # Batting/Bowling Frame
-        self.batting_bowling_button_frame = tk.Frame(window)
+        self.batting_bowling_button_frame = tk.Frame(self.right_panel)
         self.batting_bowling_button_frame.pack(pady=3)
 
         # Batting buttons
         self.choose_batting_buttons = []
         for option in ["Batting"]:
-            button = tk.Button(self.batting_bowling_button_frame, text=option, command=lambda option=option: 
-                            self.select_bat(), font=("Arial", 10))
+            button = tk.Button(self.batting_bowling_button_frame, text=option, command=lambda option=option:
+                               self.select_bat(), font=("Arial", 10))
             button.pack(side="left", padx=5)
             self.choose_batting_buttons.append(button)
         # Bowling buttons
         self.choose_bowling_buttons = []
         for option in ["Bowling"]:
-            button = tk.Button(self.batting_bowling_button_frame, text=option, command=lambda option=option: 
-                            self.select_bowl(), font=("Arial", 10))
+            button = tk.Button(self.batting_bowling_button_frame, text=option, command=lambda option=option:
+                               self.select_bowl(), font=("Arial", 10))
             button.pack(side="left", padx=5)
             self.choose_bowling_buttons.append(button)
 
-        # Runs, Overs and Wickets
-        self.runs_wickets_frame = tk.Frame(window)
+        # Your input to Batting or Bowling
+        self.runs_buttons_label = tk.Label(self.right_panel, text="Your Input:", font=("Arial", 12, "bold"))
+        self.runs_buttons_label.pack(pady=3)
+
+        # Runs buttons
+        self.runs_buttons_frame = tk.Frame(self.right_panel)
+        self.runs_buttons_frame.pack(pady=3)
+
+        self.run_buttons = []
+        for i in range(7):
+            button = tk.Button(self.runs_buttons_frame, text=str(i), command=lambda r=i: 
+                               self.user_bat_bowl(r), font=("Arial", 10))
+            button.pack(side="left", padx=5)
+            self.run_buttons.append(button)
+
+        # Additional GUI elements for batting shots
+        self.batting_shots_label = tk.Label(self.right_panel, text="Batting Shots:", font=("Arial", 12, "bold"))
+        self.batting_shots_label.pack(pady=3)
+
+        self.batting_shots_frame = tk.Frame(self.right_panel)
+        self.batting_shots_frame.pack(pady=3)
+
+        self.batting_shots = ["Defensive Shot", "Attacking Shot", "Lofted Shot"]
+        self.advanced_batting_buttons = []
+        for shot in self.batting_shots:
+            button = tk.Button(self.batting_shots_frame, text=shot, command=lambda s=shot: self.user_bat_with_shot(s),
+                               font=("Arial", 10))
+            button.pack(side="left", padx=5)
+            self.advanced_batting_buttons.append(button)
+
+        # Additional GUI elements for bowling variations
+        self.bowling_variations_label = tk.Label(self.right_panel, text="Bowling Variations:",
+                                                 font=("Arial", 12, "bold"))
+        self.bowling_variations_label.pack(pady=3)
+
+        self.bowling_variations_frame = tk.Frame(self.right_panel)
+        self.bowling_variations_frame.pack(pady=3)
+
+        self.bowling_variations = ["Fast Bowling", "Spin Bowling", "Swing Bowling"]
+        self.advanced_bowling_buttons = []
+        for variation in self.bowling_variations:
+            button = tk.Button(self.bowling_variations_frame, text=variation,
+                               command=lambda v=variation: self.bot_bowl_with_variation(v), font=("Arial", 10))
+            button.pack(side="left", padx=5)
+            self.advanced_bowling_buttons.append(button)
+
+        # Reset Button
+        self.reset_button = tk.Button(self.right_panel, text="Reset", command=self.reset_game, font=("Arial", 12))
+        self.reset_button.pack(pady=10)
+
+        #-----left pannel elements-----
+        # Hand Gesture Displays
+        self.gesture_frame = tk.Frame(self.left_panel)
+        self.gesture_frame.pack(pady=3)
+
+        # Player Gesture
+        self.player_gesture_label = tk.Label(self.gesture_frame, text="Player's Input:",
+                                             font=("Arial", 12, "bold"))
+        self.player_gesture_label.grid(row=0, column=0)
+
+        self.player_gesture_image = tk.Label(self.gesture_frame)
+        self.player_gesture_image.grid(row=1, column=0, padx=15)
+
+        # Bot Gesture
+        self.bot_gesture_label = tk.Label(self.gesture_frame, text="Bot's Input:",
+                                          font=("Arial", 12, "bold"))
+        self.bot_gesture_label.grid(row=0, column=1)
+
+        self.bot_gesture_image = tk.Label(self.gesture_frame)
+        self.bot_gesture_image.grid(row=1, column=1, padx=15)
+
+        # Actual Scorecard
+        self.scorecards_label = tk.Label(self.left_panel, text="Actual Scorecard:", font=("Arial", 12, "bold"))
+        self.scorecards_label.pack(pady=3)
+
+        self.scorecards_text = tk.Text(self.left_panel, width=50, height=3, font=("Arial", 10))
+        self.scorecards_text.pack()
+
+        # Commentry Box
+        self.commentry_label = tk.Label(self.left_panel, text="Commentry Box:", font=("Arial", 12, "bold"))
+        self.commentry_label.pack(pady=3)
+
+        self.commentary_text = tk.Text(self.left_panel, width=50, height=4, font=("Arial", 10))
+        self.commentary_text.pack(pady=3)
+
+        # Scorecards Frame
+        self.scorecards_frame = tk.Frame(self.left_panel)
+        self.scorecards_frame.pack(pady=3)
+
+        # Batsman Scorecard
+        self.batsman_scorecard_label = tk.Label(self.scorecards_frame, text="Batsman Scorecard:",
+                                                font=("Arial", 12, "bold"))
+        self.batsman_scorecard_label.grid(row=0, column=0)
+
+        self.batsman_scorecard_text = tk.Text(self.scorecards_frame, width=30, height=7, font=("Arial", 10))
+        self.batsman_scorecard_text.grid(row=1, column=0, padx=10)
+
+        # Bowler Scorecard
+        self.bowler_scorecard_label = tk.Label(self.scorecards_frame, text="Bowler Scorecard:",
+                                               font=("Arial", 12, "bold"))
+        self.bowler_scorecard_label.grid(row=0, column=1)
+
+        self.bowler_scorecard_text = tk.Text(self.scorecards_frame, width=30, height=7, font=("Arial", 10))
+        self.bowler_scorecard_text.grid(row=1, column=1, padx=10)
+
+        # Current Runs, Overs, and Wickets
+        self.runs_wickets_frame = tk.Frame(self.left_panel)
         self.runs_wickets_frame.pack(pady=3)
 
         self.runs_label = tk.Label(self.runs_wickets_frame, text="Runs: 0", font=("Arial", 12))
@@ -72,92 +188,10 @@ class HandCricketGame:
 
         self.overs_label = tk.Label(self.runs_wickets_frame, text="Overs: 0", font=("Arial", 12))
         self.overs_label.pack(side="left", padx=3)
-
-        # Bot's Guess
-        self.bot_label = tk.Label(window, text="Bot's Guess:", font=("Arial", 12, "bold"))
-        self.bot_label.pack(pady=3)
-
-        # Actual Scorecard
-        self.scorecards_label = tk.Label(window, text="Actual Scorecard:", font=("Arial", 12, "bold"))
-        self.scorecards_label.pack(pady=3)
-
-        self.scorecards_text = tk.Text(window, width=50, height=3, font=("Arial", 10))
-        self.scorecards_text.pack()
-
-        # Your input to Batting or Bowling
-        self.runs_buttons_label = tk.Label(window, text="Your Input:", font=("Arial", 12, "bold"))
-        self.runs_buttons_label.pack(pady=3)
-
-        # Runs buttons
-        self.runs_buttons_frame = tk.Frame(window)
-        self.runs_buttons_frame.pack(pady=3)
-
-        self.run_buttons = []
-        for i in range(7):
-            button = tk.Button(self.runs_buttons_frame, text=str(i), command=lambda r=i: self.user_bat_bowl(r), font=("Arial", 10))
-            button.pack(side="left", padx=5)
-            self.run_buttons.append(button)
-
-        # Additional GUI elements for batting shots
-        self.batting_shots_label = tk.Label(window, text="Batting Shots:", font=("Arial", 12, "bold"))
-        self.batting_shots_label.pack(pady=3)
-
-        self.batting_shots_frame = tk.Frame(window)
-        self.batting_shots_frame.pack(pady=3)
-
-        self.batting_shots = ["Defensive Shot", "Attacking Shot", "Lofted Shot"]
-        self.advanced_batting_buttons = []
-        for shot in self.batting_shots:
-            button = tk.Button(self.batting_shots_frame, text=shot, command=lambda s=shot: self.user_bat_with_shot(s), font=("Arial", 10))
-            button.pack(side="left", padx=5)
-            self.advanced_batting_buttons.append(button)
-
-        # Additional GUI elements for bowling variations
-        self.bowling_variations_label = tk.Label(window, text="Bowling Variations:", font=("Arial", 12, "bold"))
-        self.bowling_variations_label.pack(pady=3)
-
-        self.bowling_variations_frame = tk.Frame(window)
-        self.bowling_variations_frame.pack(pady=3)
-
-        self.bowling_variations = ["Fast Bowling", "Spin Bowling", "Swing Bowling"]
-        self.advanced_bowling_buttons = []
-        for variation in self.bowling_variations:
-            button = tk.Button(self.bowling_variations_frame, text=variation, command=lambda v=variation: 
-                               self.bot_bowl_with_variation(v), font=("Arial", 10))
-            button.pack(side="left", padx=5)
-            self.advanced_bowling_buttons.append(button)
-
-        # Commentry Box
-        self.commentry_label = tk.Label(window, text="Commentry Box:", font=("Arial", 12, "bold"))
-        self.commentry_label.pack(pady=3)
-
-        self.commentary_text = tk.Text(window, width=50, height=4, font=("Arial", 10))
-        self.commentary_text.pack(pady=3)
-
-       # Scorecards Frame
-        self.scorecards_frame = tk.Frame(window)
-        self.scorecards_frame.pack(pady=3)
-
-        # Batsman Scorecard
-        self.batsman_scorecard_label = tk.Label(self.scorecards_frame, text="Batsman Scorecard:", font=("Arial", 12, "bold"))
-        self.batsman_scorecard_label.grid(row=0, column=0)
-
-        self.batsman_scorecard_text = tk.Text(self.scorecards_frame, width=30, height=7, font=("Arial", 10))
-        self.batsman_scorecard_text.grid(row=1, column=0, padx=10)
-
-        # Bowler Scorecard
-        self.bowler_scorecard_label = tk.Label(self.scorecards_frame, text="Bowler Scorecard:", font=("Arial", 12, "bold"))
-        self.bowler_scorecard_label.grid(row=0, column=1)
-
-        self.bowler_scorecard_text = tk.Text(self.scorecards_frame, width=30, height=7, font=("Arial", 10))
-        self.bowler_scorecard_text.grid(row=1, column=1, padx=10)
-
-        # Reset Button
-        self.reset_button = tk.Button(window, text="Reset", command=self.reset_game, font=("Arial", 12))
-        self.reset_button.pack(pady=10)
         
         # Call Start Game method
         self.start_game()
+        self.update_default_hand_gestures()
         
     def start_game(self):
         
@@ -318,9 +352,14 @@ class HandCricketGame:
         self.show_message("Your bowling sessions starts")
     
     def user_bat_bowl(self, runs):
+        self.bot_guess = random.randint(0, 6)
+
+        # Update gestures before performing any calculations
+        self.update_hand_gestures(runs, self.bot_guess)
+        self.player_gesture_label.config(text="Player's Guess: "+ str(runs))
+        self.bot_gesture_label.config(text="Bot's Guess: "+ str(self.bot_guess))
+
         if self.batting_enabled:
-            self.bot_guess = random.randint(0, 6)
-            self.bot_label.config(text="Bot's Guess: " + str(self.bot_guess))
 
             if runs != self.bot_guess:
                 self.runs += runs
@@ -365,8 +404,6 @@ class HandCricketGame:
                     self.show_message("Innings Over, Your custom overs reached. Innings is over!")
                     
         elif self.bowling_enabled:
-            self.bot_guess = random.randint(0, 6)
-            self.bot_label.config(text="Bot's Guess: " + str(self.bot_guess))
 
             if runs != self.bot_guess:
                 self.bot_runs += self.bot_guess
@@ -440,7 +477,8 @@ class HandCricketGame:
         self.runs_label.config(text="Runs: 0")
         self.outs_label.config(text="Wickets: 0")
         self.overs_label.config(text="Overs: 0 / " + str(self.custom_overs))
-        self.bot_label.config(text="Bot's Guess: ")
+        self.player_gesture_label.config(text="Player's Guess: ")
+        self.bot_gesture_label.config(text="Bot's Guess: ")
 
         if self.innings_count == 1:
             messagebox.showinfo("Between Innings", "First innings is over!\n\n" + inning_scorecard)
@@ -460,6 +498,7 @@ class HandCricketGame:
         self.disable_advanced_bowling_buttons()
 
         self.check_game_over() #Checks if Game Over
+        self.update_default_hand_gestures()
 
     def update_batsman_scorecard(self):
         self.batsman_scorecard_text.delete(1.0, tk.END)
@@ -533,7 +572,39 @@ class HandCricketGame:
     def show_message(self, message):
         self.commentary_text.delete(1.0, tk.END)
         self.commentary_text.insert(tk.END, message)
-    
+
+    def update_hand_gestures(self, player_gesture, bot_gesture):
+        # Update Player's Hand Gesture
+        player_image_path = f"hand_gestures/run_{player_gesture}.png"
+        player_image = Image.open(player_image_path)
+        player_image = player_image.resize((100, 100))
+        player_photo = ImageTk.PhotoImage(player_image)
+        self.player_gesture_image.configure(image=player_photo)
+        self.player_gesture_image.image = player_photo
+
+        # Update Bot's Hand Gesture
+        bot_image_path = f"hand_gestures/run_{bot_gesture}.png"
+        bot_image = Image.open(bot_image_path)
+        bot_image = bot_image.resize((100, 100))
+        bot_photo = ImageTk.PhotoImage(bot_image)
+        self.bot_gesture_image.configure(image=bot_photo)
+        self.bot_gesture_image.image = bot_photo
+
+    def update_default_hand_gestures(self):
+        # Update Player's Hand Gesture to default
+        player_image = Image.open("hand_gestures/run_default.png")
+        player_image = player_image.resize((100, 100))
+        player_photo = ImageTk.PhotoImage(player_image)
+        self.player_gesture_image.configure(image=player_photo)
+        self.player_gesture_image.image = player_photo
+
+        # Update Bot's Hand Gesture to default
+        bot_image = Image.open("hand_gestures/run_default.png")
+        bot_image = bot_image.resize((100, 100))
+        bot_photo = ImageTk.PhotoImage(bot_image)
+        self.bot_gesture_image.configure(image=bot_photo)
+        self.bot_gesture_image.image = bot_photo
+
     def enable_match_mode_buttons(self):
         for button in self.match_mode_buttons:
             button.config(state="normal")
@@ -638,7 +709,8 @@ class HandCricketGame:
         self.runs_label.config(text="Runs: 0")
         self.outs_label.config(text="Wickets: 0")
         self.overs_label.config(text="Overs: 0")
-        self.bot_label.config(text="Bot's Guess: ")
+        self.player_gesture_label.config(text="Player's Guess: ")
+        self.bot_gesture_label.config(text="Bot's Guess: ")
 
         # Delete text fields text on Reset Game
         self.scorecards_text.delete(1.0, tk.END)
@@ -654,6 +726,8 @@ class HandCricketGame:
         self.disable_runs_buttons()
         self.disable_advanced_batting_buttons()
         self.disable_advanced_bowling_buttons()
+
+        self.update_default_hand_gestures()
 
     
 # Create the main window
