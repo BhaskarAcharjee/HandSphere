@@ -7,18 +7,25 @@ class HandCricketGame:
     def __init__(self, window):
         self.window = window
         self.window.title("Virtual Cricket Game")
+        
+        # Call All Start-Game methods
+        self.create_widget()
+        self.set_default()
+        self.start_game()
+        self.update_default_hand_gestures()
 
+    def create_widget(self):
         # ---------GUI elements---------
         # Game Heading
-        game_heading_label = tk.Label(window, text="Hand Cricket Game", font=("Arial", 24, "bold"))
+        game_heading_label = tk.Label(self.window, text="Hand Cricket Game", font=("Arial", 24, "bold"))
         game_heading_label.pack(pady=10)
 
         # Left Panel
-        self.left_panel = tk.Frame(window)
+        self.left_panel = tk.Frame(self.window)
         self.left_panel.pack(side="left", padx=10)
 
         # Right Panel
-        self.right_panel = tk.Frame(window)
+        self.right_panel = tk.Frame(self.window)
         self.right_panel.pack(side="left", padx=10)
 
         #-----right pannel elements-----
@@ -207,13 +214,7 @@ class HandCricketGame:
         self.overs_label = tk.Label(self.runs_wickets_frame, text="Overs: 0", font=("Arial", 12))
         self.overs_label.pack(side="left", padx=3)
         
-        # Call Start Game method
-        self.start_game()
-        self.update_default_hand_gestures()
-        self.set_default()
-        
     def start_game(self):
-        
         # Game variables
         self.runs = 0
         self.wickets = 0
