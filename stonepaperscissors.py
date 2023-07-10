@@ -1,4 +1,5 @@
 import tkinter as tk
+from PIL import ImageTk, Image
 import random
 
 class StonePaperScissorsGame:
@@ -23,13 +24,25 @@ class StonePaperScissorsGame:
         choices_frame = tk.Frame(self.window)
         choices_frame.pack()
 
-        stone_button = tk.Button(choices_frame, text="Stone", width=10, command=lambda: self.make_choice("Stone"))
+        stone_image = Image.open("hand_gestures/stone.png")
+        stone_image = stone_image.resize((100, 100), Image.LANCZOS)
+        stone_photo = ImageTk.PhotoImage(stone_image)
+        stone_button = tk.Button(choices_frame, image=stone_photo, command=lambda: self.make_choice("Stone"))
+        stone_button.image = stone_photo
         stone_button.pack(side="left", padx=10)
 
-        paper_button = tk.Button(choices_frame, text="Paper", width=10, command=lambda: self.make_choice("Paper"))
+        paper_image = Image.open("hand_gestures/paper.png")
+        paper_image = paper_image.resize((100, 100), Image.LANCZOS)
+        paper_photo = ImageTk.PhotoImage(paper_image)
+        paper_button = tk.Button(choices_frame, image=paper_photo, command=lambda: self.make_choice("Paper"))
+        paper_button.image = paper_photo
         paper_button.pack(side="left", padx=10)
 
-        scissors_button = tk.Button(choices_frame, text="Scissors", width=10, command=lambda: self.make_choice("Scissors"))
+        scissors_image = Image.open("hand_gestures/scissors.png")
+        scissors_image = scissors_image.resize((100, 100), Image.LANCZOS)
+        scissors_photo = ImageTk.PhotoImage(scissors_image)
+        scissors_button = tk.Button(choices_frame, image=scissors_photo, command=lambda: self.make_choice("Scissors"))
+        scissors_button.image = scissors_photo
         scissors_button.pack(side="left", padx=10)
 
         result_label = tk.Label(self.window, textvariable=self.result_text, font=("Arial", 16))
