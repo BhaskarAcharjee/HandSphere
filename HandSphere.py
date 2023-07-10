@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, simpledialog
 from PIL import Image, ImageTk
 import random
 
@@ -9,6 +9,10 @@ class HandCricketGame:
         self.window.title("Virtual Cricket Game")
 
         # ---------GUI elements---------
+        # Game Heading
+        game_heading_label = tk.Label(window, text="Hand Cricket Game", font=("Arial", 24, "bold"))
+        game_heading_label.pack(pady=10)
+
         # Left Panel
         self.left_panel = tk.Frame(window)
         self.left_panel.pack(side="left", padx=10)
@@ -282,39 +286,17 @@ class HandCricketGame:
         self.enable_choose_wicks_buttons()
 
     def get_custom_overs(self):
-        # Create a dialog box or an entry field to get the number of overs for custom mode
-        dialog_window = tk.Toplevel(self.window)
-        dialog_window.title("Custom Overs")
-
-        # Label and entry field for custom overs
-        custom_overs_label = tk.Label(dialog_window, text="Enter the number of overs:")
-        custom_overs_label.pack(pady=10)
-        custom_overs_entry = tk.Entry(dialog_window)
-        custom_overs_entry.pack()
-
-        # Submit button
-        submit_button = tk.Button(dialog_window, text="Submit", command=lambda: self.submit_custom_overs(dialog_window, custom_overs_entry))
-        submit_button.pack(pady=10)
-
-        # Focus the entry field
-        custom_overs_entry.focus_set()
-
-        # Run the dialog window event loop
-        dialog_window.mainloop()
-
-        return self.custom_overs
-    
-    def submit_custom_overs(self, dialog_window, custom_overs_entry):
-        overs = custom_overs_entry.get()
-        if overs.isdigit() and int(overs) > 0:
-            self.custom_overs = int(overs)
-            dialog_window.destroy()
-            self.update_overs_label()  # Update the overs label with the custom overs value
+        overs = simpledialog.askinteger("Custom Overs", "Enter the number of overs:")
+        if overs is not None and overs > 0:
+            self.custom_overs = overs
+            self.update_overs_label()
             self.update_match_mode_label()
-            self.enable_choose_wicks_buttons()  # Enable the choose wicks after custom overs submission
-            self.disable_match_mode_buttons()  # Disable the match mode buttons after custom overs submission
+            self.enable_choose_wicks_buttons()
+            self.disable_match_mode_buttons()
         else:
             messagebox.showerror("Invalid Input", "Please enter a valid number of overs.")
+
+        return self.custom_overs
 
     def update_overs_label(self):
         self.overs_label.config(text="Overs: 0 / " + str(self.custom_overs))
@@ -348,38 +330,16 @@ class HandCricketGame:
         self.enable_toss_buttons()
 
     def get_custom_wicks(self):
-        # Create a dialog box or an entry field to get the number of overs for custom mode
-        dialog_window = tk.Toplevel(self.window)
-        dialog_window.title("Custom Wickets")
-
-        # Label and entry field for custom overs
-        custom_wicks_label = tk.Label(dialog_window, text="Enter the number of wickets:")
-        custom_wicks_label.pack(pady=10)
-        custom_wicks_entry = tk.Entry(dialog_window)
-        custom_wicks_entry.pack()
-
-        # Submit button
-        submit_button = tk.Button(dialog_window, text="Submit", command=lambda: self.submit_custom_wicks(dialog_window, custom_wicks_entry))
-        submit_button.pack(pady=10)
-
-        # Focus the entry field
-        custom_wicks_entry.focus_set()
-
-        # Run the dialog window event loop
-        dialog_window.mainloop()
-
-        return self.custom_wicks
-    
-    def submit_custom_wicks(self, dialog_window, custom_wicks_entry):
-        wicks = custom_wicks_entry.get()
-        if wicks.isdigit() and int(wicks) > 0:
-            self.custom_wicks = int(wicks)
-            dialog_window.destroy()
+        wicks = simpledialog.askinteger("Custom Wickets", "Enter the number of wickets:")
+        if wicks is not None and wicks > 0:
+            self.custom_wicks = wicks
             self.update_wicks_label()
             self.disable_choose_wicks_buttons()
             self.enable_toss_buttons()
         else:
             messagebox.showerror("Invalid Input", "Please enter a valid number of wickets.")
+
+        return self.custom_wicks
 
     def choose_toss_option(self, option):
         toss_options = ["Heads", "Tails"]
@@ -844,11 +804,11 @@ class HandCricketGame:
         self.set_default()
 
     
-# Create the main window
-window = tk.Tk()
+# # Create the main window
+# window = tk.Tk()
 
-# Create the Hand Cricket game instance
-game = HandCricketGame(window)
+# # Create the Hand Cricket game instance
+# game = HandCricketGame(window)
 
-# Run the GUI event loop
-window.mainloop()
+# # Run the GUI event loop
+# window.mainloop()
