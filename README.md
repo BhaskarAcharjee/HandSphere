@@ -1,46 +1,81 @@
-# HandSphere - Hand Cricket Game
+# HandSphere - Hand Gesture Game
 
-HandSphere is a Python-based interactive hand cricket game that allows you to play the popular game of hand cricket against a computer bot. Put your batting and bowling skills to the test and see if you can outscore the bot!
+HandSphere is a Python-based hand gesture game that combines two classic games, Hand Cricket and Rock Paper Scissors, into a single interactive experience. The game leverages hand gestures and user input to create an engaging and challenging gameplay environment.
+
+## Game Description
+
+The objective of HandSphere is to compete against the computer in a series of hand gesture matches. The game consists of two main components: Hand Cricket and Rock Paper Scissors.
+
+### Hand Cricket
+
+Hand Cricket is a classic game where players use hand gestures to represent cricket scores. The computer randomly selects a number from 1 to 6, and the player also selects a number using their hand gesture. If the player's number matches the computer's number, the player is out. Otherwise, the player's number is added to their score. The game continues until the player is out or chooses to end the inning.
+
+### Rock Paper Scissors
+
+Rock Paper Scissors is a popular hand gesture game where players choose between rock, paper, and scissors gestures to determine the winner. In HandSphere, the player competes against the computer in a series of rounds. The computer's hand gesture is randomly generated, and the player selects their hand gesture to challenge the computer. The winner of each round is determined based on the classic Rock Paper Scissors rules.
 
 ## Features
 
-- <b>Toss:</b> The game starts with a toss to determine who bats first. You can choose either "Heads" or "Tails" to make your selection.
-- <b>Batting and Bowling:</b> Once the toss is complete, you can choose to bat or bowl based on the toss result. Select the appropriate option to proceed.
-- <b>Batting Shots (Advanced Version):</b> In the advanced version of HandSphere, you have the option to play different batting shots such as "Defensive Shot," "Attacking Shot," and "Lofted Shot." Each shot has different potential runs associated with it, making the game more exciting.
-- Bowling Variations (Advanced Version):</b> In the advanced version, you can also choose from various bowling variations like "Fast Bowling," "Spin Bowling," and "Swing Bowling." Each variation has different potential runs associated with it, making the game more challenging.
-- <b>Scoring:</b> The game keeps track of your runs, wickets, and the bot's guess. The scorecard is displayed in real-time, allowing you to monitor your progress during the game.
-- <b>Innings:</b> The game is played in two innings. The first inning is your batting innings, and the second inning is your bowling innings. After each inning, you can view the scorecard and proceed to the next inning if required.
-- <b>Target Score:</b> In the second inning, a target score is set based on the runs scored in the first inning. Your goal is to chase down the target within the specified number of overs.
-- <b>Game Over:</b> The game concludes when all wickets are down or the specified number of overs are completed in the second inning. At the end of the game, the final scorecard is displayed, and the winner is announced.
+- Interactive and intuitive user interface using the tkinter library
+- Hand gesture recognition for player input
+- Randomized computer hand gestures
+- Score tracking for each game
+- Multiple difficulty levels to adjust the challenge
+- Visual feedback for game results
+- Ability to play multiple rounds and innings
+- Restart and quit options for the game
 
-## Requirements
+## Installation
 
-- Python 3.x
-- Tkinter library (usually comes pre-installed with Python)
+To run HandSphere, ensure you have Python 3.x installed on your system. Follow these steps:
 
-## How to Run
-
-1. Ensure you have Python 3.x installed on your system.
-2. Clone or download the HandSphere repository to your local machine.
-3. Open a terminal or command prompt and navigate to the project directory.
-4. Run the following command to start the game:
-
-   ```shell
+1. Clone the repository or download the source code files.
+2. Install the required dependencies by running the following command:
+   ```
+   pip install tkinter
+   pip install pillow
+   ```
+3. Run the game by executing the following command:
+   ```
    python HandSphere.py
    ```
 
-5. The game window will open, and you can start playing by following the on-screen instructions.
+## Gameplay Instructions
+
+1. Launch the HandSphere game.
+2. Select the desired difficulty level for the game.
+3. Follow the on-screen instructions to play Hand Cricket and Rock Paper Scissors.
+4. Use hand gestures to represent your moves according to the game prompts.
+5. Observe the computer's hand gestures and make your selections accordingly.
+6. Track your score and game progress on the screen.
+7. Continue playing rounds or innings until you decide to quit.
+8. Enjoy the challenge and have fun!
 
 ## Game Controls
 
-- Use the mouse to click on buttons and make selections.
-- For the advanced version, click on the appropriate batting shot or bowling variation buttons to play the shot or bowl the ball.
+- Use appropriate hand gestures to mimic cricket scores in Hand Cricket.
+- Show rock, paper, or scissors hand gestures to compete in Rock Paper Scissors.
+- Use the mouse to navigate the game interface and select options.
+
+## License
+
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT). Feel free to modify and distribute the code for personal and educational purposes.
 
 ## Acknowledgments
 
-The HandSphere project is built using Python's tkinter library, which provides the necessary GUI components for creating the game interface. It was developed as a learning exercise and can be extended or modified as per your requirements.
+The HandSphere game was inspired by the classic games Hand Cricket and Rock Paper Scissors. It leverages the power of Python, tkinter, and hand gesture recognition techniques to create an enjoyable gaming experience.
+
+Libraries and resources used in this project:
+
+- [tkinter](https://docs.python.org/3/library/tkinter.html)
+- [Pillow](https://python-pillow.org/)
 
 ## Contributing
-<b>Contributions are welcome!</b> If you find any issues or have suggestions for further improvements, please feel free to open an issue or submit a pull request.
 
-#### Enjoy playing HandSphere and have fun!
+Contributions to HandSphere are always welcome! If you have any ideas, suggestions, or bug fixes, please submit a pull request or open an issue on the project's GitHub repository.
+
+Let's make HandSphere even better together!
+
+---
+
+#### Have a great time playing HandSphere! 
